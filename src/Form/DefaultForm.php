@@ -10,6 +10,8 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class DefaultForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
+
+    // Ignore the 'name_field' and 'num_names'. They will need to be renamed.
     $i = 0;
     $name_field = $form_state->get('num_names');
     $form['#tree'] = TRUE;
@@ -19,9 +21,11 @@ class DefaultForm extends FormBase {
       '#prefix' => '<div id="names-fieldset-wrapper">',
       '#suffix' => '</div>',
     ];
+    // Check if we have any sections, if not - set it to 1.
     if (empty($name_field)) {
       $name_field = $form_state->set('num_names', 1);
     }
+    // Loop through the sections
     for ($i = 0; $i < $name_field; $i++) {
       $form['sections_fieldset'][$i] = [
         '#type' => 'fieldset',
@@ -42,6 +46,7 @@ class DefaultForm extends FormBase {
     $form['actions'] = [
       '#type' => 'actions',
     ];
+    // Adds the 'add' button and ajax callback
     $form['sections_fieldset']['actions']['add_name'] = [
       '#type' => 'submit',
       '#value' => t('Add section'),
@@ -51,6 +56,8 @@ class DefaultForm extends FormBase {
         'wrapper' => 'names-fieldset-wrapper',
       ],
     ];
+    // if we have more than one;
+    // Adds the 'remove' button and ajax callback
     if ($name_field > 1) {
       $form['sections_fieldset']['actions']['remove_name'] = [
         '#type' => 'submit',
